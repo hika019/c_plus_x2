@@ -2,6 +2,7 @@
 
 int main(){
   int i;
+  //フォールスルーに注意
 
   for(i=0; i<5; ++i){
     switch (i) {
