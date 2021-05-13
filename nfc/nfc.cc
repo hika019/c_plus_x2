@@ -3,6 +3,35 @@
 #include <cstdio>
 #include <cstdlib>
 
+int show_device_info(){
+  structure_device_information device_info;
+  unsigned char device_info_type;
+  unsigned char device_info_connect;
+  device_info.device_info_type = device_info_type;
+  device_info.device_info_connect = device_info_connect;
+
+  if(!get_device_information(&device_info)){
+    std::cout << "cant get device info" << '\n';
+    return 1;
+  }
+
+  std::cout << "device type:" << device_info.device_info_type << '\n';
+  std::cout << "device connect:" << device_info.device_info_connect<< '\n';
+  return 0;
+}
+
+void error_routine(void){
+    enumernation_felica_error_type felica_error_type;
+    enumernation_rw_error_type rw_error_type;
+    get_last_error_types(&felica_error_type, &rw_error_type);
+    printf("felica_error_type: %d\n", felica_error_type);
+    printf("rw_error_type: %d\n", rw_error_type);
+
+    close_reader_writer();
+    dispose_library();
+}
+
+
 int main(){
   if(!initialize_library()){
     std::cout << "Library initialization failed." << '\n';
@@ -12,6 +41,11 @@ int main(){
     std::cout << "open_reader_writer_auto failed" << '\n';
     return 1;
   }
+
+
+
+
+  show_device_info();
 
   structure_polling polling;
   unsigned char system_code[2] = {0x00, 0x00};
@@ -25,22 +59,16 @@ int main(){
   card_information.card_idm = card_idm;
   card_information.card_pmm = card_pmm;
 
-  structure_device_information device_info;
-  unsigned char device_info_type;
-  unsigned char device_info_connect;
-  unsigned char hoge;
-  device_info.device_info_type = device_info_type;
-  device_info.device_info_connect = device_info_connect;
-
-  if(!get_device_information(&device_info)){
-    std::cout << "cant get device info" << '\n';
-    return 1;
+  if (!polling_and_get_card_information(&polling, &number_of_cards, &card_information)) {
+      fprintf(stderr, "Can't find FeliCa.\n");
   }
 
-  std::cout << "device type:" << device_info.device_info_type << '\n';
-  std::cout << "device connect:" << device_info.device_info_connect<< '\n';
+  error_routine();
 
-  
+
+  std::cout << "card_idm:"<< card_idm << '\n';
+
+
 
   if (!close_reader_writer()) {
       fprintf(stderr, "Can't close reader writer.\n");
