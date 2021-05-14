@@ -1,7 +1,9 @@
 #include <iostream>
 
+
 int main(){
-  int i, n, a, r[1024], u[1024], v[1024], q;
+  int i, r[2^10], u[2^10], v[2^10], q;
+  unsigned long long int a, n;
   std::cout << "法nにおけるaの逆元" << '\n';
   std::cout << "a n" << '\n';
   std::cin >> a >> n;
