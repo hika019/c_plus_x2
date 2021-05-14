@@ -37,10 +37,10 @@ int main(){
     std::cout << "Library initialization failed." << '\n';
     return 1;
   }
-  if(!open_reader_writer_auto()){
-    std::cout << "open_reader_writer_auto failed" << '\n';
-    return 1;
-  }
+   if(!open_reader_writer_auto()){
+     std::cout << "open_reader_writer_auto failed" << '\n';
+     return 1;
+   }
 
 
 
@@ -59,11 +59,12 @@ int main(){
   card_information.card_idm = card_idm;
   card_information.card_pmm = card_pmm;
 
-  if (!polling_and_get_card_information(&polling, &number_of_cards, &card_information)) {
-      fprintf(stderr, "Can't find FeliCa.\n");
-  }
+  unsigned long int time;
 
-  error_routine();
+  get_lock_timeout(&time);
+  std::cout << time << '\n';
+
+  //error_routine();
 
 
   std::cout << "card_idm:"<< card_idm << '\n';
