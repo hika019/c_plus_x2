@@ -43,7 +43,12 @@ int main(){
    }
 
 
+   unsigned long timeout = 600;
 
+   set_polling_timeout(timeout);
+   get_polling_timeout(&timeout);
+
+   std::cout << "timeout: " << timeout << '\n';
 
   show_device_info();
 
@@ -54,18 +59,17 @@ int main(){
 
   unsigned char number_of_cards = 1;
   structure_card_information card_information;
-  unsigned char card_idm[8];
+  unsigned char card_idm[8] ="";
   unsigned char card_pmm[8];
   card_information.card_idm = card_idm;
   card_information.card_pmm = card_pmm;
 
-  unsigned long int time;
-
-  get_lock_timeout(&time);
-  std::cout << time << '\n';
 
   //error_routine();
+  if (!polling_and_get_card_information(&polling, &number_of_cards, &card_information)) {
+      fprintf(stderr, "Can't find FeliCa.\n");
 
+  }
 
   std::cout << "card_idm:"<< card_idm << '\n';
 
